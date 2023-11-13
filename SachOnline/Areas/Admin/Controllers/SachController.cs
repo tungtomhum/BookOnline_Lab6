@@ -192,6 +192,30 @@ namespace SachOnline.Areas.Admin.Controllers
             return View(sach);
         }
 
+        // Hàm kiểm tra đăng nhập
+        private bool IsAdminLoggedIn()
+        {
+            return Session["Admin"] != null;
+        }
+
+        // Hàm chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        private ActionResult RedirectToLogin()
+        {
+            return RedirectToAction("Login", "Admin");
+        }
+
+        // Hàm xác định xem người dùng đã đăng nhập hay chưa trước khi thực hiện các hành động
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            // Kiểm tra đăng nhập ở đây
+            if (!IsAdminLoggedIn())
+            {
+                // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+                filterContext.Result = RedirectToLogin();
+            }
+        }
 
     }
 

@@ -1,8 +1,5 @@
 ﻿using SachOnline.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SachOnline.Areas.Admin.Controllers
@@ -24,30 +21,30 @@ namespace SachOnline.Areas.Admin.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public ActionResult Login()
         {
             return View();
         }
+
         [HttpPost]
-        public ActionResult Login(FormCollection f)
+        public ActionResult Login(FormCollection form)
         {
-            var sTenDN = f["your_name"]; 
-            var sMatKhau = f["your_pass"];
+            var username = form["your_name"];
+            var password = form["your_pass"];
 
-            ADMIN ad = db.ADMINs.SingleOrDefault(n => n.TenDN == sTenDN && n.MatKhau== sMatKhau);
-            if (ad != null)
+            ADMIN admin = db.ADMINs.SingleOrDefault(n => n.TenDN == username && n.MatKhau == password);
+            if (admin != null)
             {
-                Session["Admin"] = ad;
-
+                Session["Admin"] = admin;
                 return RedirectToAction("Index", "Admin");
             }
             else
             {
                 ViewBag.ErrorMessage = "Tên đăng nhập hoặc mật khẩu không đúng";
-                return View(); 
+                return View();
             }
         }
-
     }
 }

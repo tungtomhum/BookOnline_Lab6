@@ -25,7 +25,7 @@ namespace SachOnline.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.MaKH = new SelectList(db.KHACHHANGs.ToList().OrderBy(n => n.MaKH), "MaKH", "TenNXB");
+            ViewBag.MaKH = new SelectList(db.KHACHHANGs.ToList().OrderBy(n => n.MaKH), "MaKH", "HoTen");
             return View();
         }
 
@@ -69,13 +69,13 @@ namespace SachOnline.Areas.Admin.Controllers
             var khachhang = db.KHACHHANGs.SingleOrDefault(n => n.MaKH == id);
             if (khachhang == null)
             {
-                return HttpNotFound();
+                Response.StatusCode = 404;
+                return null;
             }
             return View(khachhang);
         }
-
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id, FormCollection f)
+        public ActionResult DeleteConfirm(int id, FormCollection f)
         {
             var khachhang = db.KHACHHANGs.SingleOrDefault(n => n.MaKH == id);
             if (khachhang == null)
@@ -84,10 +84,10 @@ namespace SachOnline.Areas.Admin.Controllers
                 return null;
             }
 
-            var sach = db.DONDATHANGs.Where(s => s.MaKH == id);
-            if (sach.Count() > 0)
+            var ddh = db.KHACHHANGs.Where(s => s.MaKH == id);
+            if (ddh.Count() > 0)
             {
-                ViewBag.ThongBao = "Không thể xóa khách hàng này vì có đơn hàng chưa thanh toán.";
+                ViewBag.ThongBao = "Không thể xóa khách hàng này vì có Đơn đặt hàng liên quan đến khách hàng này. Hãy yêu cầu khách hàng thanh toán các đơn đặt hàng trước khi xóa khách hàng.";
                 return View(khachhang);
             }
 
@@ -134,7 +134,30 @@ namespace SachOnline.Areas.Admin.Controllers
         }
 
 
+        // Hàm kiểm tra đăng nhập
+        private bool IsAdminLoggedIn()
+        {
+            return Session["Admin"] != null;
+        }
 
+        // Hàm chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        private ActionResult RedirectToLogin()
+        {
+            return RedirectToAction("Login", "Admin");
+        }
+
+        // Hàm xác định xem người dùng đã đăng nhập hay chưa trước khi thực hiện các hành động
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            // Kiểm tra đăng nhập ở đây
+            if (!IsAdminLoggedIn())
+            {
+                // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+                filterContext.Result = RedirectToLogin();
+            }
+        }
 
     }
 }
