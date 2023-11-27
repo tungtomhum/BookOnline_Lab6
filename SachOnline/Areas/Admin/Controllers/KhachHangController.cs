@@ -7,12 +7,20 @@ using System.Web.Mvc;
 using PagedList;
 using System.IO;
 using System.Web.UI.WebControls;
+using SachOnline.Controllers;
 
 namespace SachOnline.Areas.Admin.Controllers
 {
     public class KhachHangController : Controller
     {
-        dbSachOnlineDataContext db = new dbSachOnlineDataContext("Data Source=LAPTOP-SD6JFUCG\\MSSQLSERVER01;Initial Catalog=SachOnline;Integrated Security=True");
+        private string connection;
+        private dbSachOnlineDataContext db;
+
+        public KhachHangController()
+        {
+            // Khởi tạo chuỗi kết nối
+            db = Connect.GetConnect();
+        }
         // GET: Admin/khachhang
         public ActionResult Index(int? page)
         {
@@ -84,7 +92,7 @@ namespace SachOnline.Areas.Admin.Controllers
                 return null;
             }
 
-            var ddh = db.KHACHHANGs.Where(s => s.MaKH == id);
+            var ddh = db.DONDATHANGs.Where(s => s.MaKH == id);
             if (ddh.Count() > 0)
             {
                 ViewBag.ThongBao = "Không thể xóa khách hàng này vì có Đơn đặt hàng liên quan đến khách hàng này. Hãy yêu cầu khách hàng thanh toán các đơn đặt hàng trước khi xóa khách hàng.";

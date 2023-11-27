@@ -18,10 +18,9 @@
         
             public SachOnlineController()
             {
-                // Khởi tạo chuỗi kết nối
-                connection = "Data Source=LAPTOP-SD6JFUCG\\MSSQLSERVER01;Initial Catalog=SachOnline;Integrated Security=True";
-                data = new dbSachOnlineDataContext(connection);
-            }
+            // Khởi tạo chuỗi kết nối
+            data = Connect.GetConnect();
+        }
             public ActionResult NavPartial()
             {
                 return PartialView();
@@ -49,7 +48,32 @@
                 return View(pagedBooks);
             }
 
-            public ActionResult SachBanNhieuPartial()
+            public ActionResult About()
+            {
+                return View();
+            }
+        [HttpGet]
+        public ActionResult Contact()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Contact(BINHLUAN binhluan, FormCollection f)
+        {
+            if (ModelState.IsValid)
+            {
+                data.BINHLUANs.InsertOnSubmit(binhluan);
+                data.SubmitChanges();
+                //Vé trang Quån sach
+                return RedirectToAction("Index");
+            }
+
+            return View(binhluan);
+        }
+
+
+
+        public ActionResult SachBanNhieuPartial()
             {
                 // Truy vấn cơ sở dữ liệu để lấy danh sách sách bán nhiều nhất.
                 var listSachBanNhieu = data.SACHes.OrderByDescending(a => a.SoLuongBan).Take(6).ToList();

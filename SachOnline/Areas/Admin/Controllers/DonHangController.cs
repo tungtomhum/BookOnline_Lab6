@@ -5,19 +5,95 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PagedList;
+using SachOnline.Controllers;
+using System.Web.UI;
 
 namespace SachOnline.Areas.Admin.Controllers
 {
     public class DonHangController : Controller
     {
         // GET: Admin/DonHang
-        dbSachOnlineDataContext db = new dbSachOnlineDataContext("Data Source=LAPTOP-SD6JFUCG\\MSSQLSERVER01;Initial Catalog=SachOnline;Integrated Security=True");
+        private string connection;
+        private dbSachOnlineDataContext db;
+
+        public DonHangController()
+        {
+            // Khởi tạo chuỗi kết nối
+            db = Connect.GetConnect();
+        }
+
         public ActionResult Index(int? page)
         {
             int iPageNum = (page ?? 1);
             int iPageSize = 7;
             return View(db.DONDATHANGs.ToList().OrderBy(n => n.MaDonHang).ToPagedList(iPageNum, iPageSize));
         }
+
+        public ActionResult Details(int id)
+        {
+            var donhang = db.DONDATHANGs.SingleOrDefault(n => n.MaDonHang == id);
+            if (donhang == null)
+            {
+                Response.StatusCode = 404;
+                return null;
+            }
+            return View(donhang);
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var dh = db.DONDATHANGs.SingleOrDefault(n => n.MaDonHang == id);
+            if (dh == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(dh);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(DONDATHANG dh)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingdonhang = db.DONDATHANGs.SingleOrDefault(n => n.MaDonHang == dh.MaDonHang);
+
+                if (existingdonhang != null)
+                {
+                    existingdonhang.DaThanhToan = dh.DaThanhToan;
+                    existingdonhang.TinhTrangGiaoHang = dh.TinhTrangGiaoHang;
+                    existingdonhang.NgayDat = dh.NgayDat;
+                    existingdonhang.NgayGiao = dh.NgayGiao;
+
+                    db.SubmitChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View(dh);
+        }
+        public ActionResult BinhLuan(int? page)
+        {
+            int iPageNum = (page ?? 1);
+            int iPageSize = 7;
+            return View(db.BINHLUANs.ToList().OrderBy(n => n.MaBinhLuan).ToPagedList(iPageNum, iPageSize));
+        }
+        public ActionResult DetailBL(int id)
+        {
+            var binhluan = db.BINHLUANs.SingleOrDefault(n => n.MaBinhLuan == id);
+            if (binhluan == null)
+            {
+                Response.StatusCode = 404;
+                return null;
+            }
+            return View(binhluan);
+        }
+
+
+
+
+
 
         [HttpGet]
         public ActionResult Delete(int id)
@@ -31,7 +107,7 @@ namespace SachOnline.Areas.Admin.Controllers
             return View(ddh);
         }
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirm(int id, FormCollection f)
+        public ActionResult DeleteConfirm(int id)
         {
             var ddh = db.DONDATHANGs.SingleOrDefault(n => n.MaDonHang == id);
             if (ddh == null)
@@ -43,15 +119,21 @@ namespace SachOnline.Areas.Admin.Controllers
             var ctdh = db.CHITIETDATHANGs.Where(s => s.MaDonHang == id);
             if (ctdh.Count() > 0)
             {
-                ViewBag.ThongBao = "Không thể xóa đơn hàng này vì có Chi tiết đặt hàng liên quan đến đơn hàng này. Hãy yêu cầu khách hàng thanh toán các đơn đặt hàng trước khi xóa đơn hàng hoặc xóa chi tiết đặt hàng trước.";
-                return View(ddh);
+                // Xóa chi tiết đặt hàng trước
+                foreach (var chiTiet in ctdh)
+                {
+                    db.CHITIETDATHANGs.DeleteOnSubmit(chiTiet);
+                }
+                db.SubmitChanges();
             }
 
+            // Sau đó mới xóa đơn đặt hàng
             db.DONDATHANGs.DeleteOnSubmit(ddh);
             db.SubmitChanges();
 
             return RedirectToAction("Index");
         }
+
 
         // Hàm kiểm tra đăng nhập
         private bool IsAdminLoggedIn()

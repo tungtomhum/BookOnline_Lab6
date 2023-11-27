@@ -134,6 +134,7 @@
     <Compile Include="Areas\Admin\Controllers\KhachHangController.cs" />
     <Compile Include="Areas\Admin\Controllers\NhaXuatBanController.cs" />
     <Compile Include="Areas\Admin\Controllers\SachController.cs" />
+    <Compile Include="Controllers\Connect.cs" />
     <Compile Include="Controllers\GioHangController.cs" />
     <Compile Include="Controllers\SachOnlineController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -320,9 +321,21 @@
     <Content Include="Areas\Admin\Views\KhachHang\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\DonHang\Index.cshtml" />
     <Content Include="Areas\Admin\Views\DonHang\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\DonHang\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\DonHang\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\DonHang\BinhLuan.cshtml" />
+    <Content Include="Areas\Admin\Views\DonHang\DetailBL.cshtml" />
     <None Include="Models\dbSachOnline.dbml.layout">
       <DependentUpon>dbSachOnline.dbml</DependentUpon>
     </None>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile3.pubxml" />
+    <None Include="Properties\PublishProfiles\tungtomhum-001-site1 - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\tungtomhum-001-site1 - FTP1.pubxml" />
+    <None Include="Properties\PublishProfiles\tungtomhum-001-site1 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\tungtomhum-001-site1 - Web Deploy1.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -366,10 +379,13 @@
     <Content Include="Views\Shared\NavPartialNew.cshtml" />
     <Content Include="Views\Shared\LoginLogoutPartial.cshtml" />
     <Content Include="Views\SachOnline\LoginLogout.cshtml" />
+    <Content Include="Views\SachOnline\About.cshtml" />
+    <Content Include="Views\SachOnline\Contact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Views\Connect\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

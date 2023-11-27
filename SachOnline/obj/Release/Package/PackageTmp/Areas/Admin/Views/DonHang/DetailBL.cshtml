@@ -1,0 +1,42 @@
+﻿@model SachOnline.Models.BINHLUAN
+
+@{
+    ViewBag.Title = "DetailBL";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>BÌNH LUẬN</h2>
+
+<div>
+    <h4>CHI TIẾT BÌNH LUẬN</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Nội dung bình luận:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoiDungBinhLuan)
+        </dd>
+
+        <dt>
+            Họ tên:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TenKH)
+        </dd>
+
+        <dt>
+            Email:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailKH)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("TRỞ LẠI", "BinhLuan")
+</p>
